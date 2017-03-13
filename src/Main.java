@@ -1,4 +1,4 @@
-package sample;
+
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
@@ -96,7 +96,6 @@ public class Main extends Application {
         final DoubleProperty rectangleVelocity = new SimpleDoubleProperty();
         final LongProperty lastUpdateTime = new SimpleLongProperty();
         final AnimationTimer rectangleAnimation = new AnimationTimer() {
-            @Override
             public void handle(long timestamp) {
                 if (lastUpdateTime.get() > 0) {
                     final double elapsedSeconds = (timestamp - lastUpdateTime.get()) / 1_000_000_000.0 ;
