@@ -1,5 +1,5 @@
 
-public class Vampire extends Case{
+public class Empty extends Case{
 
 	@Override
 	public boolean move(Case c) {
@@ -10,7 +10,7 @@ public class Vampire extends Case{
 	@Override
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -18,6 +18,5 @@ public class Vampire extends Case{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
 
 }
