@@ -333,8 +333,8 @@ public class ChristmasTreePath extends Application
      *
      * @param arguments Command-line arguments; none expected.
      */
-    public static void main(final String[] arguments)
+   /* public static void main(final String[] arguments)
     {
         Application.launch(arguments);
-    }
+    }*/
 }

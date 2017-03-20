@@ -1,12 +1,14 @@
 
-public class Pistolero extends Case{
-
+public class Pistolero extends Character{
+	
+	public Pistolero(){
+		life = 3;
+	}
 	public boolean Shoot(Case c){
 		return c.takeShot();
 	}
 	@Override
-	public boolean move(Case c) {
-		// TODO Auto-generated method stub
+	public boolean moveOn() {
 		return false;
 	}
 
@@ -17,8 +19,8 @@ public class Pistolero extends Case{
 	}
 	@Override
 	public boolean takeShot() {
-		// TODO Auto-generated method stub
-		return false;
+		life--;
+		return true;
 	}
 	
 }

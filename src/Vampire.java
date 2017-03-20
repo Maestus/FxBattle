@@ -1,9 +1,11 @@
 
-public class Vampire extends Case{
-
+public class Vampire extends Character{
+	
+	public Vampire(){
+		life = 3;
+	}
 	@Override
-	public boolean move(Case c) {
-		// TODO Auto-generated method stub
+	public boolean moveOn() {
 		return false;
 	}
 

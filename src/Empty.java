@@ -2,9 +2,8 @@
 public class Empty extends Case{
 
 	@Override
-	public boolean move(Case c) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean moveOn() {
+		return true;
 	}
 
 	@Override
