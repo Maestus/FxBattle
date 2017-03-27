@@ -31,7 +31,7 @@ public class Main extends Application {
     private static final int WALK_DOWN_OFFSET_Y =    76;
     private static final int WIDTH    =    32;
     private static final int HEIGHT   =    32;
-
+    double x , y;
     public static void main(String[] args) {
         launch(args);
     }
@@ -39,7 +39,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         Pane pane = new Pane();
         pane.setPrefSize(1024,640);
-
+        x=0;
+        y=0;
         personnage = new Image("file:Data/pixelart.png");
         final ImageView courir_vers_la_droite = new ImageView(personnage);
         courir_vers_la_droite.setViewport(new Rectangle2D(OFFSET_X, WALK_RIGHT_OFFSET_Y, WIDTH, HEIGHT));
@@ -100,20 +101,23 @@ public class Main extends Application {
                 if (lastUpdateTime.get() > 0) {
                     final double elapsedSeconds = (timestamp - lastUpdateTime.get()) / 1_000_000_000.0 ;
                     final double delta = elapsedSeconds * rectangleVelocity.get();
-                    final double oldX = courir_vers_la_droite.getTranslateX();
-                    final double oldY = courir_vers_le_bas.getTranslateY();
+     
                     if(droite) {
-                        courir_vers_la_droite.setTranslateY(oldY);
-                        courir_vers_la_droite.setTranslateX(Math.max(minX, Math.min(maxX, oldX + delta)));
+                        courir_vers_la_droite.setTranslateY(y);
+                        x = Math.max(minX, Math.min(maxX, x + delta));
+                        courir_vers_la_droite.setTranslateX(x);
                     } else if(gauche) {
-                        courir_vers_la_gauche.setTranslateY(oldY);
-                        courir_vers_la_gauche.setTranslateX(Math.min(maxX, Math.min(maxX, oldX - delta)));
+                        courir_vers_la_gauche.setTranslateY(y);
+                        x = Math.min(maxX, Math.min(maxX, x - delta));
+                        courir_vers_la_gauche.setTranslateX(x);
                     } else if(haut) {
-                        courir_vers_le_haut.setTranslateX(oldX);
-                        courir_vers_le_haut.setTranslateY(Math.max(minY, Math.min(maxY, oldY + delta)));
+                        courir_vers_le_haut.setTranslateX(x);
+                        y = Math.max(minY, Math.min(maxY, y - delta));
+                        courir_vers_le_haut.setTranslateY(y);
                     } else if(bas) {
-                        courir_vers_le_bas.setTranslateX(oldX);
-                        courir_vers_le_bas.setTranslateY(Math.max(minY, Math.min(maxY, oldY + delta)));
+                        courir_vers_le_bas.setTranslateX(x);
+                        y= Math.max(minY, Math.min(maxY, y + delta));
+                        courir_vers_le_bas.setTranslateY(y);
                     }
                 }
                 lastUpdateTime.set(timestamp);
