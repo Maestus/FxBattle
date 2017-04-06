@@ -24,7 +24,7 @@ public class Main extends Application {
 
     private static final int COLUMNS  =     3;
     private static final int COUNT    =     3;
-    private static final int OFFSET_X =     0;
+    private static final int OFFSET_X =     94;
     private static final int WALK_RIGHT_OFFSET_Y =    38;
     private static final int WALK_LEFT_OFFSET_Y =    112;
     private static final int WALK_UP_OFFSET_Y =    5;
