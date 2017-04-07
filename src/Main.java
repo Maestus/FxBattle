@@ -165,7 +165,7 @@ public class Main extends Application {
                     pane.getChildren().add(courir_vers_le_bas);
                     move_bas();
                 }
-                rectangleVelocity.set(rectangleSpeed);
+              rectangleVelocity.set(rectangleSpeed);
             }
         });
 
@@ -176,7 +176,7 @@ public class Main extends Application {
             } else if(keyEvent.getCode() == KeyCode.LEFT){
                 avancer_gauche.stop();
             }
-            rectangleVelocity.set(0);
+           rectangleVelocity.set(0);
         });
 
         primaryStage.setScene(scene);
