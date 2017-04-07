@@ -19,11 +19,10 @@ public class Vampire extends Character {
 		super(duration, columns, offsetX, offsetY, width, height, dir, life,posX,posY,p);
 		imageView = new ImageView[4];
 		this.id = id;
-		
+
 		for(int i=0;i<4;i++){
 			imageView[i]  = new ImageView(super.character);
-			imageView[i].setViewport(new Rectangle2D(offsetX,offsetY+(i*height),width,height));
-			System.out.println(offsetY+(i*height));
+			imageView[i].setViewport(new Rectangle2D(offsetX,offsetY+i*(height+3),width,height));
 		}
 	}
 
@@ -61,6 +60,7 @@ public class Vampire extends Character {
 			break;
 		}
 		this.play();
+
 		
 	}
 	
@@ -82,6 +82,7 @@ public class Vampire extends Character {
 			makeTranslateTransition(pane, posX, posX-50, posY, posY).play();
 			posX = (posX-50);
 		}
+
 	}
 	
 	void moveRight(){
