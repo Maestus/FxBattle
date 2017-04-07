@@ -25,7 +25,6 @@ public class GameLoop extends Application{
 				WIDTH, HEIGHT,0,3,0,0,pane,0);
 		pane.getChildren().add(0,v.getCurrentView());
 		final LongProperty lastUpdateTime = new SimpleLongProperty();
-
 		final AnimationTimer rectangleAnimation = new AnimationTimer() {
 
 			@Override
