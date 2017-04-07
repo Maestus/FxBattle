@@ -5,7 +5,7 @@ import javafx.util.Duration;
 
 public abstract class Character extends Sprite{
 	protected int life;
-	protected int posX,posY;
+	protected double posX,posY;
 	protected final Image character = new Image("file:Data/pixelart.png");
 	public Character(Duration duration,  int columns, int offsetX, int offsetY,
 			int width, int height, int dir,int life,int posX,int posY,Pane p) {
