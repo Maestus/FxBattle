@@ -1,3 +1,5 @@
+import java.util.List;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -25,8 +27,5 @@ public abstract class Character extends Sprite{
 			return true;
 		else 
 			return false;
-	}
-	public ImageView getCurrentView(){
-		return imageView[animCurrent];
 	}
 }
