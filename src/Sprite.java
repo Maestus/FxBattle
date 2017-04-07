@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 public abstract class Sprite extends Transition{
-	protected ImageView [] imageView;//tableau de 4 des différentes directions (Haut bas gauche droite)
+	protected static ImageView [] imageView;//tableau de 4 des différentes directions (Haut bas gauche droite)
     private final int columns;
     private final int offsetX;
     private final int offsetY;
