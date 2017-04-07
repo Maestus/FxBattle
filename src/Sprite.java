@@ -31,12 +31,17 @@ public abstract class Sprite extends Transition{
         setInterpolator(Interpolator.LINEAR);
     }
     
+
+	public ImageView getCurrentView(){
+		return imageView[animCurrent];
+	}
+    
     protected void interpolate(double k) {
         final int index = Math.min((int) Math.floor(k * columns), columns - 1);
         if (index != lastIndex) {
             final int x = (index % columns) * width  + offsetX;
             final int y = (index / columns) * height + offsetY;
-            imageView[animCurrent].setViewport(new Rectangle2D(x, y, width, height));
+            getCurrentView().setViewport(new Rectangle2D(x, y, width, height));
             lastIndex = index;
         }
     }
