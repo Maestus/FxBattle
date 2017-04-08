@@ -1,6 +1,3 @@
-import javafx.animation.*;
-import javafx.animation.Transition;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -12,7 +9,6 @@ public abstract class Sprite {
     protected int offsetY;
     protected int width;//largeur d'une image
     protected int height;//hauteur d'une image
-    private int lastIndex;
     protected int animCurrent;//direction du personnage
     protected Pane pane;
     public Sprite(
@@ -35,15 +31,6 @@ public abstract class Sprite {
 		return imageView[animCurrent];
 	}
     
-    protected void interpolate(double k) {
-        final int index = Math.min((int) Math.floor(k * columns), columns - 1);
-        if (index != lastIndex) {
-            final int x = (index % columns) * width  + offsetX;
-            final int y = (index / columns) * height + offsetY;
-            getCurrentView().setViewport(new Rectangle2D(x, y, width, height));
-            lastIndex = index;
-        }
-    }
 	public abstract boolean getCol(Character c);
 		
 

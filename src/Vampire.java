@@ -26,17 +26,13 @@ public class Vampire extends Character {
 		this.pane = p;
 		for(int i=0;i<4;i++){
 			imageView[i]  = new ImageView(super.character);
-			imageView[i].setViewport(new Rectangle2D(offsetX,offsetY+i*(height+3),width,height));
+			imageView[i].setViewport(new Rectangle2D(offsetX,offsetY+i*(height+4),width,height));
 		}
 		tl = new Timeline();
 		tl.setCycleCount(Animation.INDEFINITE);
 		tl.getKeyFrames().add(new KeyFrame(Duration.millis(200), event -> {
-            if(getCurrentView().getViewport().getMinX() !=96){
                 getCurrentView().setViewport(new Rectangle2D(getCurrentView().getViewport().getMinX()+32,getCurrentView().getViewport().getMinY(),width,height));
-            }
-            else{
-                getCurrentView().setViewport(new Rectangle2D(0,getCurrentView().getViewport().getMinY(),width,height));
-            }
+            
 }	));
 	}
 
