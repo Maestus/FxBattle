@@ -1,4 +1,5 @@
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,17 +13,19 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public class Vampire extends Character {
-	int id;
+public class Vampire extends Character implements Cloneable, Runnable{
+	Object synchron;
 	DoubleProperty rate = new SimpleDoubleProperty();
 	boolean move_undone;
 	Timeline tl;
     TranslateTransition tt = new TranslateTransition();
 
-	public Vampire(Duration duration, int columns, int offsetX, int offsetY, int width, int height, int dir, int life,int posX,int posY,Pane p,int id) {
-		super(duration, columns, offsetX, offsetY, width, height, dir, life,posX,posY,p);
+	public Vampire( Game_assets _assets, Duration duration, int columns, int offsetX, int offsetY, int width, int height, int dir, int life,int pos_x,int pos_y,Pane p,int id, Object sync) {
+		super(_assets, id, duration, columns, offsetX, offsetY, pos_x, pos_y, width, height, dir, life,p);
+		
+		synchron = sync;
+		assets.elements.put(id, this);
 		imageView = new ImageView[4];
-		this.id = id;
 		this.pane = p;
 		for(int i=0;i<4;i++){
 			imageView[i]  = new ImageView(super.character);
@@ -35,7 +38,17 @@ public class Vampire extends Character {
             
 }	));
 	}
+	
+	
+	public Vampire(int columns, int offsetX, int offsetY, int width, int height,int pos_x,int pos_y,int id) {
+		super(id, columns, offsetX, offsetY, pos_x, pos_y, width, height);
+	}
 
+
+	@Override
+	public Sprite clone(){
+		return new Vampire(columns, offsetX, offsetY, pos_x, pos_y, width, height, id);
+	}
 	
 	public Transition makeTranslateTransition(Node node, 
 	            double fromX, double toX, double fromY, double toY) {
@@ -62,54 +75,66 @@ public class Vampire extends Character {
 	}
 	
 	void move(){
-		pane.getChildren().remove(id);
-		for(int i=0;i<4;i++){
-			imageView[i].setTranslateX(posX);
-			imageView[i].setTranslateY(posY);
+		synchronized (synchron) {
+			System.out.println(id + " je bouge.");
+			pane.getChildren().remove(id);
+			for(int i=0;i<4;i++){
+				imageView[i].setTranslateX(pos_x);
+				imageView[i].setTranslateY(pos_y);
 
-		}
-		int t;
-		move_undone = true;
-		while(move_undone){
-			t = (int) (Math.random()*4);
-			switch(t){
-				case 0: 
-					moveUp();
-					break;
-				case 1: 
-					moveDown();
-					break;
-				case 2: 
-					moveLeft();
-					break;
-				case 3: 
-					moveRight();
-					break;
 			}
+			int t;
+			move_undone = true;
+			while(move_undone){
+				t = (int) (Math.random()*4);
+				switch(t){
+					case 0: 
+						moveUp();
+						break;
+					case 1: 
+						moveDown();
+						break;
+					case 2: 
+						moveLeft();
+						break;
+					case 3: 
+						moveRight();
+						break;
+				}
+			}
+				
 		}
-			
+		
 	}
 	
 	void moveUp(){
 		
 
-		if(posY >=50){
-			super.animCurrent = 0;
-			pane.getChildren().add(id,getCurrentView());
-			makeTranslateTransition(getCurrentView(), posX, posX, posY, posY-50);
-			posY = (posY-50);
-			move_undone = false;
+		if(pos_y >=50){
+			if(!check_collide_move(id, 0, -50)){
+				super.animCurrent = 0;
+				pane.getChildren().add(id,getCurrentView());
+				makeTranslateTransition(getCurrentView(), pos_x, pos_x, pos_y, pos_y-50);
+				pos_y = (pos_y-50);
+				move_undone = false;
+			} else {
+				System.out.println("Laisse beton");
+			}
 		}
 	}
 	
 	void moveLeft(){
 		
-		if(posX >=50){
-			super.animCurrent = 3;
-			pane.getChildren().add(id,getCurrentView());
-			makeTranslateTransition(getCurrentView(), posX, posX-50, posY, posY);
-			posX = (posX-50);
-			move_undone = false;
+		if(pos_x >=50){
+			if(!check_collide_move(id, -50, 0)){
+				super.animCurrent = 3;
+				pane.getChildren().add(id,getCurrentView());
+				makeTranslateTransition(getCurrentView(), pos_x, pos_x-50, pos_y, pos_y);
+				pos_x = (pos_x-50);
+				move_undone = false;
+			} else {
+				System.out.println("Laisse beton");
+			}
 		}
 	}
 	
@@ -117,27 +142,55 @@ public class Vampire extends Character {
 		
 		
 
-		if(posX <= 974){
-			super.animCurrent = 1;
-			pane.getChildren().add(id,getCurrentView());
-			makeTranslateTransition(getCurrentView(), posX, posX+50, posY, posY);
-			posX = (posX+50);
-			move_undone = false;
+		if(pos_x <= 974){
+			if(!check_collide_move(id, 50, 0)){
+				super.animCurrent = 1;
+				pane.getChildren().add(id,getCurrentView());
+				makeTranslateTransition(getCurrentView(), pos_x, pos_x+50, pos_y, pos_y);
+				pos_x = (pos_x+50);
+				move_undone = false;
+			} else {
+				System.out.println("Laisse beton");
+			}
 		}
 	}
 	
 	void moveDown(){
 		
 
-		if(posY <= 590){
-			super.animCurrent = 2;
-			pane.getChildren().add(id,getCurrentView());
-			makeTranslateTransition(getCurrentView(), posX, posX, posY, posY+50);
-			posY = (posY+50);
-			move_undone = false;
+		if(pos_y <= 590){
+			if(!check_collide_move(id, 0, 50)){
+				super.animCurrent = 2;
+				pane.getChildren().add(id,getCurrentView());
+				makeTranslateTransition(getCurrentView(), pos_x, pos_x, pos_y, pos_y+50);
+				pos_y = (pos_y+50);
+				move_undone = false;
+			} else {
+				System.out.println("Laisse beton");
+			}
 		}
 	}
 
+
+	@Override
+	public void run() {
+		final AnimationTimer rectangleAnimation = new AnimationTimer() {
+
+			private long lastUpdate = 0 ;
+            @Override
+            public void handle(long now) {
+                    if (now - lastUpdate >= 650_000_000) {
+
+                		move();
+                		
+                		lastUpdate = now ;
+                    }
+            }
+
+		};
+		rectangleAnimation.start();
+		
+	}
 
 	
 
