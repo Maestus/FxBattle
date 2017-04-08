@@ -21,7 +21,7 @@ public class GameLoop extends Application{
 	private static final int WALK_BASE = 0;
 	private static final int WIDTH    =    32;
 	private static final int HEIGHT   =    32;
-	Vampire [] v = new Vampire[5];
+	Vampire [] v = new Vampire[10];
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
@@ -29,22 +29,24 @@ public class GameLoop extends Application{
 		pane.setPrefSize(1024,640);
 		Scene scene = new Scene(pane);
 		
-		for(int i = 0; i < 5; i++)
-			v[i] = new Vampire(Duration.millis(300), COLUMNS, OFFSET_X, WALK_BASE,
+		for(int i = 0; i < 4; i++){
+			v[i] = new Vampire(Duration.millis(400), COLUMNS, OFFSET_X, WALK_BASE,
 				 				WIDTH, HEIGHT,1,3,0+(i*15),0+(i*15),pane,i);
+		}
 		
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 4; i++){
+			System.out.println("here");
 			pane.getChildren().add(i,v[i].getCurrentView());
-
+		}
 		
 		final AnimationTimer rectangleAnimation = new AnimationTimer() {
 
 			private long lastUpdate = 0 ;
             @Override
             public void handle(long now) {
-                    if (now - lastUpdate >= 250_000_000) {
+                    if (now - lastUpdate >= 650_000_000) {
 
-                		for(int i = 0; i < 10; i++)
+                		for(int i = 0; i < 4; i++)
                 			v[i].move();
                 		
                 		
