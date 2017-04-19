@@ -58,7 +58,7 @@ public class Vampire extends Character implements Cloneable, Runnable{
 	        tt.setToX(toX);
 
 	        tt.setAutoReverse(false);
-	        tt.setDuration(Duration.millis(600));
+	        tt.setDuration(Duration.millis(245));
 	        tt.setInterpolator(Interpolator.LINEAR);
 	        tt.setNode(node);
 	        tt.setOnFinished(actionEvent -> {
@@ -74,7 +74,7 @@ public class Vampire extends Character implements Cloneable, Runnable{
 	        return tt;
 	}
 	
-	void move(){
+	void move() throws InterruptedException{
 		synchronized (synchron) {
 			System.out.println(id + " je bouge.");
 			pane.getChildren().remove(id);
@@ -86,29 +86,49 @@ public class Vampire extends Character implements Cloneable, Runnable{
 			int t;
 			move_undone = true;
 			while(move_undone){
-				t = (int) (Math.random()*4);
-				switch(t){
-					case 0: 
-						moveUp();
-						break;
-					case 1: 
-						moveDown();
-						break;
-					case 2: 
-						moveLeft();
-						break;
-					case 3: 
-						moveRight();
-						break;
+				if(!all_direction_tried()){
+					t = (int) (Math.random()*4);
+					switch(t){
+						case 0: 
+							if(!direction_tried[0]){
+								direction_tried[0] = true;
+								moveUp();
+								break;
+							}
+						case 1: 
+							if(!direction_tried[1]){
+								direction_tried[1] = true;
+								moveDown();
+								break;
+							}
+						case 2: 
+							if(!direction_tried[2]){
+								direction_tried[2] = true;
+								moveLeft();
+								break;
+							}
+						case 3: 
+							if(!direction_tried[3]){
+								direction_tried[3] = true;
+								moveRight();
+								break;
+							}
+					}
+				} else {
+					System.out.println("Attente");
+					cant_move.await();
 				}
 			}
-				
+			direction_tried[0] = false;
+			direction_tried[1] = false;
+			direction_tried[2] = false;
+			direction_tried[3] = false;
+			cant_move.signal();
 		}
 		
 	}
 	
 	void moveUp(){
-		
 
 		if(pos_y >=50){
 			if(!check_collide_move(id, 0, -50)){
@@ -139,10 +159,8 @@ public class Vampire extends Character implements Cloneable, Runnable{
 	}
 	
 	void moveRight(){
-		
-		
-
-		if(pos_x <= 974){
+	
+		if(pos_x <= 317){
 			if(!check_collide_move(id, 50, 0)){
 				super.animCurrent = 1;
 				pane.getChildren().add(id,getCurrentView());
@@ -157,8 +175,7 @@ public class Vampire extends Character implements Cloneable, Runnable{
 	
 	void moveDown(){
 		
-
-		if(pos_y <= 590){
+		if(pos_y <= 317){
 			if(!check_collide_move(id, 0, 50)){
 				super.animCurrent = 2;
 				pane.getChildren().add(id,getCurrentView());
@@ -179,10 +196,12 @@ public class Vampire extends Character implements Cloneable, Runnable{
 			private long lastUpdate = 0 ;
             @Override
             public void handle(long now) {
-                    if (now - lastUpdate >= 650_000_000) {
-
-                		move();
-                		
+                    if (now - lastUpdate >= 250_000_000) {
+                    	try{
+                    		move();
+                    	} catch(Exception e) {
+                    		e.getMessage();
+                    	}
                 		lastUpdate = now ;
                     }
             }

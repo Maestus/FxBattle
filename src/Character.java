@@ -1,6 +1,9 @@
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -8,6 +11,9 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 public abstract class Character extends Sprite{
+	final Lock lock = new ReentrantLock();
+	final Condition cant_move  = lock.newCondition(); 
+	boolean [] direction_tried = new boolean[4];
 	protected int life;
 	protected final Image character = new Image("file:Data/pixelart.png");
 	public Character(Game_assets _assets, int id, Duration duration,  int columns, int offsetX, int offsetY, int _pos_x, int _pos_y,
@@ -44,6 +50,11 @@ public abstract class Character extends Sprite{
 		return false;
 	}
 	
-	
+	public boolean all_direction_tried(){
+		for(int i =0; i < 4; i++)
+			if(direction_tried[i] == false)
+				return false;
+		return true;
+	}
 	
 }

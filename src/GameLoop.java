@@ -11,14 +11,14 @@ public class GameLoop extends Application{
 	private static final int WALK_BASE = 0;
 	private static final int WIDTH    =    32;
 	private static final int HEIGHT   =    32;
-	private static final int NUMBER = 2;
+	private static final int NUMBER = 4;
 	Vampire [] v = new Vampire[NUMBER];
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Thread [] vampires = new Thread[NUMBER];
 		Object sync = new Object();
 		Pane pane = new Pane();
-		pane.setPrefSize(1024,640);
+		pane.setPrefSize(400,400);
 		Scene scene = new Scene(pane);
 	
 		for(int i = 0; i < NUMBER; i++){
