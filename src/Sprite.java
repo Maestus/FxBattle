@@ -1,8 +1,11 @@
+import javafx.animation.Animation;
+import javafx.animation.Transition;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public abstract class Sprite {
+public abstract class Sprite extends Transition {
 	protected ImageView [] imageView;//tableau de 4 des différentes directions (Haut bas gauche droite)
    protected final int columns;
     protected  int offsetX;
@@ -32,6 +35,12 @@ public abstract class Sprite {
 	}
     
 	public abstract boolean getCol(Character c);
-		
+	protected void interpolate(double k) {
+        final int index = Math.min((int) Math.floor(k * columns), columns - 1);
+            final int x = (index % columns) * width  + offsetX;
+            final int y = (index / columns) * height + offsetY;
+            getCurrentView().setViewport(new Rectangle2D(x, y, width, height));
+        
+    }
 
 }

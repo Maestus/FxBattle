@@ -33,8 +33,10 @@ public abstract class Character extends Sprite{
 		}
 		tl = new Timeline();
 		tl.setCycleCount(1);
-		tl.getKeyFrames().add(new KeyFrame(Duration.millis(200), event -> {
-                getCurrentView().setViewport(new Rectangle2D(getCurrentView().getViewport().getMinX()+32,getCurrentView().getViewport().getMinY(),width,height));
+		tl.getKeyFrames().add(new KeyFrame(Duration.millis(200), event -> {if(getCurrentView().getViewport().getMinX()!=96)
+            getCurrentView().setViewport(new Rectangle2D(getCurrentView().getViewport().getMinX()+32,getCurrentView().getViewport().getMinY(),width,height));
+			else
+                getCurrentView().setViewport(new Rectangle2D(offsetX,getCurrentView().getViewport().getMinY(),width,height));
             
 		}));
 	}

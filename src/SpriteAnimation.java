@@ -41,4 +41,6 @@ public class SpriteAnimation extends Transition {
             lastIndex = index;
         }
     }
+    
+
 }

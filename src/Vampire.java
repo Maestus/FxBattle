@@ -1,10 +1,11 @@
+import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public class Vampire extends Character {
+public class Vampire extends Character implements Runnable{
 	boolean move_undone;
 	public Vampire(Duration duration, int columns, int offsetX, int offsetY, int width, int height, int dir, int life,int posX,int posY,Pane p,int id) {
 		super(duration, columns, offsetX, offsetY, width, height, dir, life,posX,posY,p,id);
@@ -35,7 +36,7 @@ public class Vampire extends Character {
 	}
 	
 	void move(){
-		pane.getChildren().remove(id);
+		pane.getChildren().remove(getCurrentView());
 		for(int i=0;i<4;i++){
 			imageView[i].setTranslateX(posX);
 			imageView[i].setTranslateY(posY);
@@ -66,7 +67,7 @@ public class Vampire extends Character {
 	void moveUp(int depl){
 		if(posY >=depl){
 			super.animCurrent = 0;
-			pane.getChildren().add(id,getCurrentView());
+			pane.getChildren().add(getCurrentView());
 			makeTranslateTransition(getCurrentView(), posX,posY-50);
 			posY = (posY-50);
 			move_undone = false;
@@ -76,7 +77,7 @@ public class Vampire extends Character {
 	void moveLeft(int depl){
 		if(posX >=depl){
 			super.animCurrent = 3;
-			pane.getChildren().add(id,getCurrentView());
+			pane.getChildren().add(getCurrentView());
 			makeTranslateTransition(getCurrentView(), posX-50, posY);
 			posX = (posX-50);
 			move_undone = false;
@@ -86,7 +87,7 @@ public class Vampire extends Character {
 	void moveRight(int depl){
 		if(posX <= 1024-depl){
 			super.animCurrent = 1;
-			pane.getChildren().add(id,getCurrentView());
+			pane.getChildren().add(getCurrentView());
 			makeTranslateTransition(getCurrentView(), posX+50,  posY);
 			posX = (posX+50);
 			move_undone = false;
@@ -96,7 +97,7 @@ public class Vampire extends Character {
 	void moveDown(int depl){
 		if(posY <= 640-depl){
 			super.animCurrent = 2;
-			pane.getChildren().add(id,getCurrentView());
+			pane.getChildren().add(getCurrentView());
 			makeTranslateTransition(getCurrentView(),  posX, posY+50);
 			posY = (posY+50);
 			move_undone = false;
@@ -104,6 +105,28 @@ public class Vampire extends Character {
 	}
 
 
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		final AnimationTimer rectangleAnimation = new AnimationTimer() {
+
+			private long lastUpdate = 0 ;
+            @Override
+            public void handle(long now) {
+                    if (now - lastUpdate >= 650_000_000) {
+                			move();
+                	
+                        //player.getCurrentView().setViewport(new Rectangle2D(OFFSET_X_PLAYER ,player.getCurrentView().getViewport().getMinY(),WIDTH,HEIGHT));
+                		lastUpdate = now ;
+                    }
+            }
+
+		};
+		rectangleAnimation.start();
+	}
+
+	  
 	
 
 }
