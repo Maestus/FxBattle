@@ -3,19 +3,19 @@ package Retest;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public class Vampire extends Character implements Runnable{
+public class Vampire extends Character{
 	protected final Image character = new Image("file:/Users/lucaslabadens/Documents/Master 1 informatique/Interface/FxBattle/Data/pixelart.png");
 	protected int id;
-	ArrayList<Vampire> vamp;
-	ReentrantLock lock;
 	TranslateTransition tt = new TranslateTransition();
 
+	ArrayList<Vampire> vamp;
+	ReentrantLock lock;
 	public Vampire(int x, int y, int md, int maX, int maY, int oX, int oY, String img, Pane pane,
 			int life,int id,ArrayList<Vampire> v,	ReentrantLock l) {
 		super(x, y,md, maX, maY, oX, oY, img, pane, life);
@@ -32,6 +32,7 @@ public class Vampire extends Character implements Runnable{
 	@Override
 	public void move() {
 		// TODO Auto-generated method stub
+		lock.lock();
 		System.out.println("in lock"+id);
 		int choice = (int) (Math.random()*4);
 		switch(choice){
@@ -48,7 +49,6 @@ public class Vampire extends Character implements Runnable{
 			moveRight();
 			break;
 		}
-		//lock.lock();
 
 		for(int i=0;i<vamp.size();i++){
 			if(vamp.get(i).getId() != id && checkCollide(vamp.get(i))){
@@ -58,7 +58,7 @@ public class Vampire extends Character implements Runnable{
 			}
 		}
 		System.out.println("sors");
-		//lock.unlock();
+		lock.unlock();
 
 	}
 
@@ -77,8 +77,9 @@ public class Vampire extends Character implements Runnable{
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		remove();	
-	
+		remove();
+		tt.setFromX(posX);
+		tt.setFromY(posY);
 		if(moveY<0)
 			currentView =0;
 		else if(moveY>0)
@@ -87,10 +88,6 @@ public class Vampire extends Character implements Runnable{
 			currentView=1;
 		else if(moveX<0)
 			currentView=3;
-		getCurrentView().relocate(posX, posY);
-
-		tt.setFromX(getCurrentView().getX());
-		tt.setFromY(getCurrentView().getY());
 		if(life !=0){
 			posX +=moveX;
 			posY +=moveY;
@@ -98,33 +95,31 @@ public class Vampire extends Character implements Runnable{
 				posX=0;
 			if(posY<0)
 				posY=0;
-			if(posX>=maxX-32)
+			if(posX>maxX-32)
 				posX =maxX-32;
-			if(posY>=maxY-32)
+			if(posY>maxY-32)
 				posY = maxY-32;
 			moveX=0;
 			moveY=0;
+			add();
 			tt.setToX(posX);
+			tt.setDuration(Duration.millis(240));
 			tt.setToY(posY);
 			tt.setNode(getCurrentView());
-			tt.setAutoReverse(false);
-			tt.setDuration(Duration.millis(200));
-			tt.setInterpolator(Interpolator.LINEAR);
-			add();
 			tt.play();
-
 		}
 		else{
 			/*animation de mort et remove*/
 		}
 	}
+	public void calme(){
+		Platform.runLater(new Runnable() {
+            @Override public void run() {
+            	update();
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		move();
-		
-	
+            }
+        });
 	}
+
 
 }

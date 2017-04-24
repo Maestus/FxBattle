@@ -5,6 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -21,37 +22,41 @@ public class GameLoop extends Application{
 		ArrayList<Vampire> vamp = new ArrayList<Vampire>();
 		ReentrantLock lock = new ReentrantLock();
 		for(int i=0;i<4;i++){
-			vamp.add(new Vampire(i*36,i*36,10*(i+1),400,400,0,0,"file:/Data/pixelart.png",pane,100,i,vamp,lock));
+			vamp.add(new Vampire(i*36,i*36,40,400,400,0,0,"file:/Data/pixelart.png",pane,100,i,vamp,lock));
 			vamp.get(i).add();
 			vamp.get(i).update();
 
 		}
-		Thread [] t = new Thread[vamp.size()];
-		for(int i=0;i<vamp.size();i++){
-			t[i] = new Thread(vamp.get(i));
-		}
-		final AnimationTimer rectangleAnimation = new AnimationTimer() {
+		final AnimationTimer animaction = new AnimationTimer() {
 
 			private long lastUpdate = 0 ;
 			@Override
-			
 			public void handle(long now) {
-				if (now - lastUpdate >= 550_000_000) {
+				if (now - lastUpdate >= 250_000_000) {
 					for(int i=0;i<vamp.size();i++){
-						t[i].start();
-						vamp.get(i).update();
-					
+					Vampire sub =vamp.get(i);
+	            	sub.move();
+
+					Platform.runLater(new Runnable() {
+			            @Override public void run() {
+			            	sub.update();
+
+			            }
+			        });
+
 					}
 					lastUpdate = now ;
 				}
 			}
-		};rectangleAnimation.start();
-		
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
-	public static void main(String[]args){
-		launch(args);
-	}
+		};
+		animaction.start();
 
-}
+			
+			primaryStage.setScene(scene);
+			primaryStage.show();
+		}
+		public static void main(String[]args){
+			launch(args);
+		}
+
+	}
