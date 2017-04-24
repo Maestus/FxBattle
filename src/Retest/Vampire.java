@@ -3,19 +3,22 @@ package Retest;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 public class Vampire extends Character implements Runnable{
-	protected final Image character = new Image("file:/Users/lucaslabadens/Documents/Master 1 informatique/Interface/FxBattle/Data/pixelart.png");
+	protected final Image character = new Image("file:Data/pixelart.png");
 	protected int id;
 	ArrayList<Vampire> vamp;
 	ReentrantLock lock;
 	TranslateTransition tt = new TranslateTransition();
-
+	double last_x, last_y;
+	
 	public Vampire(int x, int y, int md, int maX, int maY, int oX, int oY, String img, Pane pane,
 			int life,int id,ArrayList<Vampire> v,	ReentrantLock l) {
 		super(x, y,md, maX, maY, oX, oY, img, pane, life);
@@ -78,9 +81,8 @@ public class Vampire extends Character implements Runnable{
 	public void update() {
 		// TODO Auto-generated method stub
 		remove();
-		
-		tt.setFromX(posX);
-		tt.setFromY(posY);
+		last_x = posX;
+		last_y = posY;
 		if(moveY<0)
 			currentView =0;
 		else if(moveY>0)
@@ -102,17 +104,10 @@ public class Vampire extends Character implements Runnable{
 				posY = maxY-32;
 			moveX=0;
 			moveY=0;
-			tt.setToX(posX);
-			tt.setToY(posY);
-			tt.setNode(getCurrentView());
-			tt.setAutoReverse(false);
-			tt.setDuration(Duration.millis(550));
-			tt.setInterpolator(Interpolator.LINEAR);
-			add();
-			tt.play();
-			//etCurrentView().relocate(posX, posY);
-
+			
+		add();
 		}
+		
 		else{
 			/*animation de mort et remove*/
 		}
@@ -121,16 +116,33 @@ public class Vampire extends Character implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		//while(true){
-		move();
-		/*try{
-			//Thread.sleep(550);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-		}*/
-		
+		final AnimationTimer rectangleAnimation = new AnimationTimer() {
+
+			private long lastUpdate = 0 ;
+			@Override
+			public void handle(long now) {
+				if (now - lastUpdate >= 650_000_000) {
+					move();
+					Platform.runLater(new Runnable() {
+			            @Override public void run() {
+			            	update();
+			        		tt.setFromX(last_x);
+			        		tt.setFromY(last_y);
+			            	tt.setToX(posX);
+			    			tt.setToY(posY);
+			    			tt.setNode(getCurrentView());
+			    			tt.setAutoReverse(false);
+			    			tt.setDuration(Duration.millis(550));
+			    			tt.setInterpolator(Interpolator.LINEAR);
+			    			tt.play();
+			            }
+			        });
+					lastUpdate = now ;
+				}
+			}
+		};
+		rectangleAnimation.start();
+	
 	}
 
 }
