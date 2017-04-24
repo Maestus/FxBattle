@@ -26,25 +26,27 @@ public class GameLoop extends Application{
 			vamp.get(i).update();
 
 		}
+		Thread [] t = new Thread[vamp.size()];
+		for(int i=0;i<vamp.size();i++){
+			t[i] = new Thread(vamp.get(i));
+		}
 		final AnimationTimer rectangleAnimation = new AnimationTimer() {
 
 			private long lastUpdate = 0 ;
 			@Override
+			
 			public void handle(long now) {
-				if (now - lastUpdate >= 650_000_000) {
+				if (now - lastUpdate >= 550_000_000) {
 					for(int i=0;i<vamp.size();i++){
-
-					vamp.get(i).update();
+						t[i].start();
+						vamp.get(i).update();
+					
 					}
 					lastUpdate = now ;
 				}
 			}
 		};rectangleAnimation.start();
-		Thread [] t = new Thread[vamp.size()];
-		for(int i=0;i<vamp.size();i++){
-			t[i] = new Thread(vamp.get(i));
-			t[i].start();
-		}
+		
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}

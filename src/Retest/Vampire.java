@@ -32,7 +32,6 @@ public class Vampire extends Character implements Runnable{
 	@Override
 	public void move() {
 		// TODO Auto-generated method stub
-		lock.lock();
 		System.out.println("in lock"+id);
 		int choice = (int) (Math.random()*4);
 		switch(choice){
@@ -49,6 +48,7 @@ public class Vampire extends Character implements Runnable{
 			moveRight();
 			break;
 		}
+		//lock.lock();
 
 		for(int i=0;i<vamp.size();i++){
 			if(vamp.get(i).getId() != id && checkCollide(vamp.get(i))){
@@ -58,7 +58,7 @@ public class Vampire extends Character implements Runnable{
 			}
 		}
 		System.out.println("sors");
-		lock.unlock();
+		//lock.unlock();
 
 	}
 
@@ -77,10 +77,8 @@ public class Vampire extends Character implements Runnable{
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		remove();
-		
-		tt.setFromX(posX);
-		tt.setFromY(posY);
+		remove();	
+	
 		if(moveY<0)
 			currentView =0;
 		else if(moveY>0)
@@ -89,6 +87,10 @@ public class Vampire extends Character implements Runnable{
 			currentView=1;
 		else if(moveX<0)
 			currentView=3;
+		getCurrentView().relocate(posX, posY);
+
+		tt.setFromX(getCurrentView().getX());
+		tt.setFromY(getCurrentView().getY());
 		if(life !=0){
 			posX +=moveX;
 			posY +=moveY;
@@ -96,9 +98,9 @@ public class Vampire extends Character implements Runnable{
 				posX=0;
 			if(posY<0)
 				posY=0;
-			if(posX>maxX-32)
+			if(posX>=maxX-32)
 				posX =maxX-32;
-			if(posY>maxY-32)
+			if(posY>=maxY-32)
 				posY = maxY-32;
 			moveX=0;
 			moveY=0;
@@ -106,11 +108,10 @@ public class Vampire extends Character implements Runnable{
 			tt.setToY(posY);
 			tt.setNode(getCurrentView());
 			tt.setAutoReverse(false);
-			tt.setDuration(Duration.millis(550));
+			tt.setDuration(Duration.millis(200));
 			tt.setInterpolator(Interpolator.LINEAR);
 			add();
 			tt.play();
-			//etCurrentView().relocate(posX, posY);
 
 		}
 		else{
@@ -121,16 +122,9 @@ public class Vampire extends Character implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		//while(true){
 		move();
-		/*try{
-			//Thread.sleep(550);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-		}*/
 		
+	
 	}
 
 }
