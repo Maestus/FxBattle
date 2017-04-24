@@ -47,6 +47,7 @@ public abstract class Sprite {
         this.height    = height;  
         this.pos_x = _pos_x;
         this.pos_y = _pos_y;   
+        
     }
         
 

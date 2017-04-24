@@ -1,9 +1,11 @@
 package Retest;
 
+import javafx.animation.Transition;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public abstract class Sprite {
+public abstract class Sprite extends Transition{
 	protected double posX;
 	protected double posY;
 	protected double moveX;
@@ -16,14 +18,15 @@ public abstract class Sprite {
 	ImageView [] imageView ;
 	String image;
 	Pane p;
-	
-	public Sprite(int x,int y,int mx,int my,int md,int maX,int maY,int oX,int oY,String img,Pane pane){
+	private int lastIndex;
+	public Sprite(int x,int y,int md,int maX,int maY,int oX,int oY,String img,Pane pane){
 		posX = x;
 		posY = y;
-		moveX = mx;
-		moveY = my;
+		moveX = 0;
+		moveY = 0;
 		maxX = maX;
 		maxY = maY;
+		currentView = 0;
 		moveDist = md;
 		offsetX =oX;
 		offsetY = oY;
@@ -40,10 +43,31 @@ public abstract class Sprite {
 		p.getChildren().remove(getCurrentView());
 	}
 	public boolean checkCollide(Sprite sp){
-		if(sp.imageView[sp.currentView].intersects(this.posX+this.moveX,this.posY+this.moveY,imageView[currentView].getFitWidth(),imageView[currentView].getFitHeight()))
-			return true;
-		else
+		
+		if(posX<=sp.posX && posX+32>sp.posX || sp.posX<=posX && sp.posX+32 > posX){
+			if(posY >sp.posY+32 && sp.posY+moveY <= sp.posY)
+				return true;
+			else if(posY+32 <sp.posY && posY+moveY+32 >=sp.posY)
+				return true;
+		}
+		else if(posY<=sp.posY && posY+32>sp.posY || sp.posY<=posY && sp.posY+32 > posY){
+
+			if(posX >sp.posX+32 && sp.posX+moveX <= sp.posX)
+				return true;
+			else if(posX+32 <sp.posX && posX+moveX+32 >=sp.posX)
+				return true;
+		}
+			System.out.println("pas de collision moi: "+posX+" "+posY+"autre "+sp.posX+" "+sp.posY);
 			return false;
+	}
+	public void interpolate(double k){
+		final int index = Math.min((int) Math.floor(k * 3), 3 - 1);
+        if (index != 3) {
+            final int x = (index % 3) * 36  + offsetX;
+            final int y = (index / 3) * 36 + offsetY;
+            getCurrentView().setViewport(new Rectangle2D(x, y, 32, 32));
+            lastIndex = index;
+        }
 	}
 	public abstract void move();
 	public abstract void update();
