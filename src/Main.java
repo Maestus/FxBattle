@@ -163,7 +163,7 @@ public class Main extends Application {
                     bas = true;
                     haut = false;
                     pane.getChildren().add(courir_vers_le_bas);
-                    move_bas();
+                   // move_bas();
                 }
               rectangleVelocity.set(rectangleSpeed);
             }

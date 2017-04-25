@@ -1,5 +1,6 @@
 package Retest;
 
+import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
@@ -28,6 +29,7 @@ public abstract class Sprite extends Transition{
 		maxY = maY;
 		currentView = 0;
 		moveDist = md;
+		this.setInterpolator(Interpolator.LINEAR);
 		offsetX =oX;
 		offsetY = oY;
 		image = img;
@@ -57,7 +59,6 @@ public abstract class Sprite extends Transition{
 			else if(posX+32 <sp.posX && posX+moveX+32 >=sp.posX)
 				return true;
 		}
-			System.out.println("pas de collision moi: "+posX+" "+posY+"autre "+sp.posX+" "+sp.posY);
 			return false;
 	}
 	public void interpolate(double k){
@@ -68,6 +69,10 @@ public abstract class Sprite extends Transition{
             getCurrentView().setViewport(new Rectangle2D(x, y, 32, 32));
             lastIndex = index;
         }
+	
+	}
+	public Rectangle2D getBounds(){
+		return new Rectangle2D(posX,posY,32,32);
 	}
 	public abstract void move();
 	public abstract void update();

@@ -14,16 +14,13 @@ public class Vampire extends Character{
 	protected int id;
 	TranslateTransition tt = new TranslateTransition();
 
-	ArrayList<Vampire> vamp;
-	ReentrantLock lock;
 	public Vampire(int x, int y, int md, int maX, int maY, int oX, int oY, String img, Pane pane,
 			int life,int id,ArrayList<Vampire> v,	ReentrantLock l) {
-		super(x, y,md, maX, maY, oX, oY, img, pane, life);
+		super(x, y,md, maX, maY, oX, oY, img, pane, life,v,l);
 		this.life =life;
 		this.id = id;
 		currentView=1;
 		vamp = v;
-		lock = l;
 		
 	}
 	public int getId(){
@@ -33,7 +30,6 @@ public class Vampire extends Character{
 	public void move() {
 		// TODO Auto-generated method stub
 		lock.lock();
-		System.out.println("in lock"+id);
 		int choice = (int) (Math.random()*4);
 		switch(choice){
 		case 0:
@@ -54,10 +50,8 @@ public class Vampire extends Character{
 			if(vamp.get(i).getId() != id && checkCollide(vamp.get(i))){
 				moveX=0;
 				moveY=0;
-				System.out.println("collision entre "+id+ " et "+vamp.get(i).getId());
 			}
 		}
-		System.out.println("sors");
 		lock.unlock();
 
 	}
@@ -110,7 +104,7 @@ public class Vampire extends Character{
 		}
 		else{
 			/*animation de mort et remove*/
-		}
+  		}
 	}
 	public void calme(){
 		Platform.runLater(new Runnable() {
